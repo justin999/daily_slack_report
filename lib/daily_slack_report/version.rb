@@ -1,0 +1,3 @@
+module DailySlackReport
+  VERSION = "0.1.0"
+end
