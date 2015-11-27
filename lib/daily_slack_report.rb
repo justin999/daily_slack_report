@@ -5,7 +5,6 @@ require "Time"
 require "Date"
 
 module DailySlackReport
-  # Your code goes here...
   def self.export_nippo(channel_name = 'general', target_date)
     client = DailySlackReport.client
     channle_id = DailySlackReport.get_channel_id(client, channel_name)
