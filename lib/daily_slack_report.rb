@@ -6,8 +6,10 @@ require "Date"
 
 module DailySlackReport
   # Your code goes here...
-  def self.export_nippo(channel_name = 'general')
-    
+  def self.export_nippo(channel_name = 'general', target_date)
+    client = DailySlackReport.client
+    channle_id = DailySlackReport.get_channel_id(client, channel_name)
+    DailySlackReport.get_chat_history(client, channle_id, target_date)
   end
 
   def self.client
@@ -15,7 +17,7 @@ module DailySlackReport
     Slack.configure do |config|
       config.token = "your_token"
     end
-    client = Slack.client
+    Slack.client
   end
 
   def self.get_channel_id(client, channel_name = 'general')
@@ -41,5 +43,6 @@ module DailySlackReport
     data["messages"].each do |message|
       messages.unshift message["text"]
     end
+    messages
   end
 end
