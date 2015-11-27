@@ -1,9 +1,15 @@
 require "daily_slack_report/version"
 require "daily_slack_report/o_auth"
 require "slack"
+require "Time"
+require "Date"
 
 module DailySlackReport
   # Your code goes here...
+  def self.export_nippo(channel_name = 'general')
+    
+  end
+
   def self.client
     require "slack"
     Slack.configure do |config|
@@ -13,9 +19,7 @@ module DailySlackReport
   end
 
   def self.get_channel_id(client, channel_name = 'general')
-    params = {
-      token: "your_token",
-    }
+    params = {}
     list = client.channels_list params
     channel_id = ""
     list["channels"].each do |channel|
@@ -26,13 +30,16 @@ module DailySlackReport
     channel_id
   end
 
-  def self.get_chat_history(client, channels_id, target_date)
-    require 'Time'
+  def self.get_chat_history(client, channel_id, target_date)
     options = {
-      channels_id: channels_id,
-      latest: Time.new(target_date.year, target_date.month, target_date.day,  0,  0,  0),
-      oldest: Time.new(target_date.year, target_date.month, target_date.day, 23, 59, 59)
+      channel: channel_id,
+      latest: Time.new(target_date.year, target_date.month, target_date.day, 23, 59, 59).to_i,
+      oldest: Time.new(target_date.year, target_date.month, target_date.day,  0,  0,  0).to_i
     }
-    client.channels_history options
+    data = client.channels_history options
+    messages = []
+    data["messages"].each do |message|
+      messages.unshift message["text"]
+    end
   end
 end
